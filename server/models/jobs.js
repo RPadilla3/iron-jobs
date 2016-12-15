@@ -1,4 +1,5 @@
 var dbConnect = require('./db-connect');
+var objectID = require('mongodb').ObjectID;
 
 module.exports = {
     getAll: getAll,
@@ -18,7 +19,16 @@ function getAll(done) {
         }
         db.collection('jobs')
             .find()
-            .toArray(done);
+            .toArray(function mapData(err, data) {
+                var mappedData = data.map(function(data) {
+                    return {
+                        'id': data._id,
+                        'company': data.company,
+                        'link': data.link
+                    };
+                });
+                done(err, mappedData);
+            });
     });
 }
 
