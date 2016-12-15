@@ -12,3 +12,4 @@ server.listen(server.get('port'), function startedServer(err) {
    console.log('Server starting on http://localhost:' + server.get('port'));
  }
 })
+server.use('/jobs', require('./routes/jobs'));
