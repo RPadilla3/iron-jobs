@@ -17,6 +17,8 @@ router.post('/', function createJob(req, res) {
     jobs.create(req.body, function dataCreated(err, data) {
       if(err) {
         console.error(err);
+        res.status(500).send('Not Today Bro..');
+        return;
       }
         res.json(data);
     });

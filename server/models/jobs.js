@@ -3,7 +3,8 @@ var objectID = require('mongodb').ObjectID;
 
 module.exports = {
     getAll: getAll,
-    create: create
+    create: create,
+    demolish: demolish
 };
 
 /**
@@ -47,4 +48,4 @@ function create(data, done) {
             .insert(data, done);
 
     })
-}
+};
