@@ -34,8 +34,14 @@ router.post('/', function createJob(req, res) {
     });
 });
 
-
-
-
+router.delete('/:id([a-f0-9]{24})', function demolishJob(req, res) {
+    jobs.demolishOne(req.params.id, function dataDeleted(err, data) {
+      if(err) {
+        console.error(err);
+        return;
+      }
+      res.json(data);
+    });
+});
 
 module.exports = router;

@@ -5,7 +5,9 @@ var newData = {};
 module.exports = {
     getAll: getAll,
     getOne: getOne,
-    create: create
+    create: create,
+    demolishOne: demolishOne
+
 };
 
 /**
@@ -38,7 +40,7 @@ function getAll(done) {
  * Get one Job from the server
  * @param  {jobID}   jobID that will be received
  * @param  {Function} done callback function
- * @return {[type]}        [description]
+ * @return {void}        
  */
 function getOne(jobID, done) {
   dbConnect(function getOneHandler(err, db) {
@@ -48,7 +50,6 @@ function getOne(jobID, done) {
     }
     db.collection('jobs')
       .findOne({_id: ObjectID(jobID)}, function callback(err, data) {
-        console.log(data);
         newData = {
           'id': data._id,
           'company': data.company,
@@ -71,10 +72,46 @@ function create(data, done) {
     dbConnect(function createHandler(err, db) {
         if (err) {
             done(err);
+            return;
         }
         data.createTime = Date.now();
         db.collection('jobs')
             .insert(data, done);
 
     })
+};
+
+/**
+ * Remove a job from the list of jobs
+ * @param  {Object}   removed  Information that will be removed
+ * @param  {Function} done callback function
+ * @return {void}
+ */
+function demolishOne(removed, done) {
+  dbConnect(function handler(err, db) {
+    if(err) {
+      console.error(err);
+      done(err);
+      return;
+    }
+    db.collection('jobs')
+      .findOne({_id: ObjectID(removed)}, function cBack(err, data) {
+        cleanData = {
+          'id': data._id,
+          'company': data.company,
+          'notes': data.notes,
+          'link': data.link,
+          'createTime': data.createTime
+        };
+      });
+      db.collection('jobs')
+        .findOneAndDelete({_id: ObjectID(removed)})
+        .then(function success(finish) {
+          done(null, cleanData);
+        }, function failure(value) {
+          done(value, null);
+        });
+
+  })
+
 };
