@@ -56,8 +56,9 @@ function getOne(jobID, done) {
           'link': data.link,
           'createTime': data.createTime
         }
-      })
-        done(null, newData);
+          done(null, newData);
+      });
+
   })
 };
 
