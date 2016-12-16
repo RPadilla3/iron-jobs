@@ -40,7 +40,7 @@ function getAll(done) {
  * Get one Job from the server
  * @param  {jobID}   jobID that will be received
  * @param  {Function} done callback function
- * @return {void}        
+ * @return {void}
  */
 function getOne(jobID, done) {
   dbConnect(function getOneHandler(err, db) {
@@ -79,6 +79,8 @@ function create(data, done) {
             .insert(data, done);
 
     })
+
+     done(null, data);
 };
 
 /**
