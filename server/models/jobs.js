@@ -1,10 +1,11 @@
 var dbConnect = require('./db-connect');
-var objectID = require('mongodb').ObjectID;
+var ObjectID = require('mongodb').ObjectID;
+var newData = {};
 
 module.exports = {
     getAll: getAll,
-    create: create,
-    demolish: demolish
+    getOne: getOne,
+    create: create
 };
 
 /**
@@ -32,6 +33,33 @@ function getAll(done) {
             });
     });
 }
+
+/**
+ * Get one Job from the server
+ * @param  {jobID}   jobID that will be received
+ * @param  {Function} done callback function
+ * @return {[type]}        [description]
+ */
+function getOne(jobID, done) {
+  dbConnect(function getOneHandler(err, db) {
+    if (err) {
+      done(err);
+      return;
+    }
+    db.collection('jobs')
+      .findOne({_id: ObjectID(jobID)}, function callback(err, data) {
+        console.log(data);
+        newData = {
+          'id': data._id,
+          'company': data.company,
+          'notes': data.notes,
+          'link': data.link,
+          'createTime': data.createTime
+        }
+      })
+        done(null, newData);
+  })
+};
 
 /**
  * Creates a POST to create a job and send it to the API
